@@ -20,7 +20,7 @@ quiere lograr.
 
 El mentee debe proporcionar todo junto:
 
-1. **CV o LinkedIn** (archivo o link)
+1. **CV** (archivo o texto)
 2. **¿Qué rol querés alcanzar y en qué plazo?**
 3. **¿Qué te falta hoy para llegar ahí?**
 4. **¿Qué caminos consideraste?** (crecer internamente, cambiar empresa,
