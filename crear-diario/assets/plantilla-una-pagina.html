@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITULO}}</title>
+<style>
+  /* ============================================================
+     PLANTILLA "DIARIO" — UNA SOLA PÁGINA (resumen)
+     Todo el contenido entra en una única .sheet A4. Como es una
+     sola hoja, no hay paginación ni riesgo de desborde de columnas.
+     Mantener la nota resumida (~300-360 palabras) para que entre.
+     ============================================================ */
+  :root {
+    --ink: #14110e;
+    --muted: #5b534b;
+    --rule: #14110e;
+    --paper: #f4f1ea;
+    --accent: #8a2019;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #d9d4c9;
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  }
+
+  .sheet {
+    position: relative;
+    width: 210mm;
+    height: 296mm;
+    margin: 8mm auto;
+    padding: 13mm 14mm 16mm;
+    background: var(--paper);
+    box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    overflow: hidden;
+    font-size: 9.6pt;
+    line-height: 1.43;
+  }
+
+  .masthead {
+    text-align: center;
+    border-bottom: 3px solid var(--rule);
+    padding-bottom: 2.6mm;
+    margin-bottom: 1.4mm;
+  }
+
+  .masthead .paper-name {
+    font-weight: 900;
+    letter-spacing: .04em;
+    font-size: 38pt;
+    line-height: .95;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .masthead .tagline {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7pt;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2mm;
+  }
+
+  .dateline-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.2pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.3mm 0;
+    margin-bottom: 4mm;
+  }
+
+  .kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8pt;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 2.2mm;
+  }
+
+  h1.headline {
+    font-weight: 900;
+    font-size: 26.5pt;
+    line-height: 1.05;
+    margin: 0 0 2.4mm;
+    letter-spacing: -.01em;
+  }
+
+  .standfirst {
+    font-size: 10.8pt;
+    line-height: 1.4;
+    color: var(--muted);
+    font-style: italic;
+    margin: 0 0 3mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid var(--muted);
+  }
+
+  .byline {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4.2mm;
+  }
+
+  .cols {
+    column-count: 2;
+    column-gap: 8.5mm;
+    column-rule: 1px solid #c9c2b5;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .cols p {
+    margin: 0 0 2.6mm;
+    text-indent: 1.1em;
+    orphans: 2;
+    widows: 2;
+  }
+
+  .cols p:first-child { text-indent: 0; }
+
+  .cols p.dropped:first-child::first-letter {
+    float: left;
+    font-weight: 900;
+    font-size: 36pt;
+    line-height: .78;
+    padding: .06em .09em 0 0;
+    color: var(--accent);
+  }
+
+  .section-title {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.2pt;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-top: 2px solid var(--rule);
+    padding-top: 1.2mm;
+    margin: 3.4mm 0 1.8mm;
+    break-after: avoid;
+  }
+
+  .pullquote {
+    break-inside: avoid;
+    border-top: 2px solid var(--rule);
+    border-bottom: 2px solid var(--rule);
+    padding: 2.4mm 0;
+    margin: 3.2mm 0;
+    text-align: center;
+  }
+
+  .pullquote p {
+    font-size: 13.2pt;
+    line-height: 1.22;
+    font-style: italic;
+    margin: 0;
+    text-indent: 0;
+  }
+
+  .pullquote p::before { content: "\201C"; }
+  .pullquote p::after  { content: "\201D"; }
+
+  .attribution {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.2pt;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1.5mm;
+  }
+
+  .colophon {
+    position: absolute;
+    left: 14mm;
+    right: 14mm;
+    bottom: 8mm;
+    border-top: 1px solid var(--rule);
+    padding-top: 2mm;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 6.8pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @page { size: A4 portrait; margin: 0; }
+
+  @media print {
+    html, body { background: #fff; }
+    .sheet {
+      width: 210mm;
+      height: 296mm;
+      margin: 0;
+      box-shadow: none;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .sheet { transform: scale(.62); transform-origin: top center; margin-bottom: 0; }
+  }
+</style>
+</head>
+<body>
+
+  <article class="sheet">
+    <header class="masthead">
+      <h1 class="paper-name">{{DIARIO}}</h1>
+      <p class="tagline">{{TAGLINE}}</p>
+    </header>
+
+    <div class="dateline-bar">
+      <span>{{SECCION}}</span>
+      <span>{{FECHA}}</span>
+      <span>Página 1</span>
+    </div>
+
+    <p class="kicker">{{VOLANTA}}</p>
+    <h1 class="headline">{{TITULO}}</h1>
+
+    <p class="standfirst">{{COPETE}}</p>
+
+    <p class="byline">{{FIRMA}}</p>
+
+    <div class="cols">
+      <p class="dropped">{{RESUMEN_PARRAFO_1}}</p>
+      <p>{{RESUMEN_PARRAFO_2}}</p>
+
+      <div class="pullquote">
+        <p>{{CITA}}</p>
+        <p class="attribution">{{AUTOR_CITA}}</p>
+      </div>
+
+      <h2 class="section-title">{{SECCION_INTERNA}}</h2>
+
+      <p>{{RESUMEN_PARRAFO_3}}</p>
+
+      <div class="pullquote">
+        <p>{{CITA_2}}</p>
+        <p class="attribution">{{AUTOR_CITA_2}}</p>
+      </div>
+
+      <p>{{RESUMEN_PARRAFO_4}}</p>
+    </div>
+
+    <footer class="colophon">
+      <span>{{DIARIO}} &middot; {{SECCION}}</span>
+      <span>{{PIE}}</span>
+    </footer>
+  </article>
+
+</body>
+</html>

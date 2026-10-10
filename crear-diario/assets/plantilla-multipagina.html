@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITULO}}</title>
+<style>
+  /* ============================================================
+     PLANTILLA "DIARIO" — MULTIPÁGINA (una .sheet = una hoja A4)
+     Reemplazar los {{PLACEHOLDERS}}. Replicar el bloque <article
+     class="sheet"> para cada página y repartir los párrafos.
+     NO convertir esto en un solo bloque de columnas continuo:
+     el multicol continuo se desborda al imprimir en Firefox.
+     ============================================================ */
+  :root {
+    --ink: #14110e;
+    --muted: #5b534b;
+    --rule: #14110e;
+    --paper: #f4f1ea;
+    --accent: #8a2019;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #d9d4c9;
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  }
+
+  /* Cada .sheet es una hoja autocontenida: nunca depende de que el
+     navegador parta columnas entre páginas. */
+  .sheet {
+    position: relative;
+    width: 210mm;
+    height: 296mm;
+    margin: 8mm auto;
+    padding: 13mm 14mm 15mm;
+    background: var(--paper);
+    box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    overflow: hidden;
+    font-size: 10.6pt;
+    line-height: 1.5;
+  }
+
+  .masthead {
+    text-align: center;
+    border-bottom: 3px solid var(--rule);
+    padding-bottom: 3.5mm;
+    margin-bottom: 1.5mm;
+  }
+
+  .masthead .paper-name {
+    font-weight: 900;
+    letter-spacing: .04em;
+    font-size: 46pt;
+    line-height: .95;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .masthead .tagline {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.4pt;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2.5mm;
+  }
+
+  .dateline-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.6mm 0;
+    margin-bottom: 5.5mm;
+  }
+
+  .runhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.2pt;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 3px solid var(--rule);
+    padding-bottom: 2.5mm;
+    margin-bottom: 3mm;
+  }
+
+  .runhead .where { color: var(--accent); font-weight: 700; }
+
+  .kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.4pt;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 2.8mm;
+  }
+
+  h1.headline {
+    font-weight: 900;
+    font-size: 32pt;
+    line-height: 1.06;
+    margin: 0 0 3mm;
+    letter-spacing: -.01em;
+  }
+
+  .standfirst {
+    font-size: 12pt;
+    line-height: 1.45;
+    color: var(--muted);
+    font-style: italic;
+    margin: 0 0 4mm;
+    padding-bottom: 4mm;
+    border-bottom: 1px solid var(--muted);
+  }
+
+  .byline {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5.5mm;
+  }
+
+  .lede {
+    font-size: 11.6pt;
+    line-height: 1.5;
+    font-weight: 600;
+    margin: 0 0 3mm;
+  }
+
+  .cols {
+    column-count: 2;
+    column-gap: 9mm;
+    column-rule: 1px solid #c9c2b5;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .cols p {
+    margin: 0 0 3mm;
+    text-indent: 1.1em;
+    orphans: 2;
+    widows: 2;
+  }
+
+  .cols p:first-child { text-indent: 0; }
+
+  .cols p.dropcap:first-child::first-letter {
+    float: left;
+    font-weight: 900;
+    font-size: 40pt;
+    line-height: .78;
+    padding: .06em .09em 0 0;
+    color: var(--accent);
+  }
+
+  .section-title {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.6pt;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-top: 2px solid var(--rule);
+    padding-top: 1.4mm;
+    margin: 4mm 0 2.2mm;
+    break-after: avoid;
+  }
+
+  .pullquote {
+    break-inside: avoid;
+    border-top: 2px solid var(--rule);
+    border-bottom: 2px solid var(--rule);
+    padding: 3mm 0;
+    margin: 4mm 0;
+    text-align: center;
+  }
+
+  .pullquote p {
+    font-size: 15pt;
+    line-height: 1.25;
+    font-style: italic;
+    margin: 0;
+    text-indent: 0;
+  }
+
+  .pullquote p::before { content: "\201C"; }
+  .pullquote p::after  { content: "\201D"; }
+
+  .attribution {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 7.6pt;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 1.8mm;
+  }
+
+  .colophon {
+    position: absolute;
+    left: 14mm;
+    right: 14mm;
+    bottom: 8mm;
+    border-top: 1px solid var(--rule);
+    padding-top: 2mm;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 6.8pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @page { size: A4 portrait; margin: 0; }
+
+  @media print {
+    html, body { background: #fff; }
+    .sheet {
+      width: 210mm;
+      height: 296mm;
+      margin: 0;
+      box-shadow: none;
+      break-after: page;
+      page-break-after: always;
+    }
+    .sheet:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .sheet { transform: scale(.62); transform-origin: top center; margin-bottom: -110mm; }
+    .sheet:last-child { margin-bottom: 0; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ================= PÁGINA 1 ================= -->
+  <article class="sheet">
+    <header class="masthead">
+      <h1 class="paper-name">{{DIARIO}}</h1>
+      <p class="tagline">{{TAGLINE}}</p>
+    </header>
+
+    <div class="dateline-bar">
+      <span>{{SECCION}}</span>
+      <span>{{FECHA}}</span>
+      <span>Página 1</span>
+    </div>
+
+    <p class="kicker">{{VOLANTA}}</p>
+    <h1 class="headline">{{TITULO}}</h1>
+
+    <p class="standfirst">{{COPETE}}</p>
+
+    <p class="byline">{{FIRMA}}</p>
+
+    <p class="lede">{{LEDE}}</p>
+
+    <div class="cols">
+      <!-- El primer párrafo de la nota lleva class="dropcap" (letra capital). -->
+      <p class="dropcap">{{PARRAFO_1}}</p>
+      <p>{{PARRAFO_2}}</p>
+
+      <!-- Cita destacada (opcional): -->
+      <div class="pullquote">
+        <p>{{CITA}}</p>
+        <p class="attribution">{{AUTOR_CITA}}</p>
+      </div>
+
+      <p>{{PARRAFO_3}}</p>
+    </div>
+
+    <footer class="colophon">
+      <span>{{DIARIO}} &middot; {{SECCION}}</span>
+      <span>1</span>
+    </footer>
+  </article>
+
+  <!-- ================= PÁGINA 2 (replicar para las siguientes) ================= -->
+  <article class="sheet">
+    <div class="runhead">
+      <span><span class="where">{{SECCION}}</span> &middot; {{TITULO_CORTO}}</span>
+      <span>{{DIARIO}} &middot; Página 2</span>
+    </div>
+
+    <div class="cols">
+      <p>{{PARRAFO}}</p>
+
+      <!-- Antetítulo interno (opcional): -->
+      <h2 class="section-title">{{SECCION_INTERNA}}</h2>
+
+      <p>{{PARRAFO}}</p>
+    </div>
+
+    <footer class="colophon">
+      <span>{{DIARIO}} &middot; {{SECCION}}</span>
+      <span>2</span>
+    </footer>
+  </article>
+
+</body>
+</html>

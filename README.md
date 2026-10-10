@@ -32,3 +32,16 @@ npx skills add https://github.com/4lb0/skills --skill mentor
 Un PM virtual con tono insistente para gestionar proyectos personales. Guía al
 usuario con dailies, plannings y seguimiento de tareas. Se activa diciendo "Hola
 Loro" y se mantiene activo durante toda la conversación.
+
+## 📰 crear-diario
+
+```
+npx skills add https://github.com/4lb0/skills --skill crear-diario
+```
+
+Convierte una nota o artículo periodístico en un HTML imprimible con formato de
+diario (masthead, volanta, titular, copete, firma, columnas, letra capital y
+citas destacadas), listo para imprimir o guardar como PDF en A4. Genera
+`print.html` (multipágina, una hoja A4 por página) y, si se pide "en una sola
+página" o una "versión resumida", genera `print_v2.html` (todo en una única
+hoja).
