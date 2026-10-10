@@ -12,7 +12,7 @@ partir del CV y metas del mentee.
 ## 🎤 entrevista
 
 ```
-npx skills add https://github.com/4lb0/skills --skill mentor
+npx skills add https://github.com/4lb0/skills --skill entrevista
 ```
 
 Simulador conversacional de entrevistas laborales con nivel profesional. El
@@ -26,7 +26,7 @@ Negociación Salarial.
 ## 🦜 loro
 
 ```
-npx skills add https://github.com/4lb0/skills --skill mentor
+npx skills add https://github.com/4lb0/skills --skill loro
 ```
 
 Un PM virtual con tono insistente para gestionar proyectos personales. Guía al
